@@ -1,7 +1,7 @@
 {
   "name": "ai-fitness-trainer",
   "version": "1.0.0",
-  "description": "AI-powered fitness and diet plan generator for beginners and teens",
+  "description": "Simple Strength - AI-powered fitness and diet plan generator for beginners and teens",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

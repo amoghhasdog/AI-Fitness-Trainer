@@ -1,4 +1,4 @@
-# AI Fitness Trainer
+# Simple Strength
 
 A comprehensive web application that generates personalized workout and diet plans using AI, specifically designed for beginners and teens.
 

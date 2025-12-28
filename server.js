@@ -276,7 +276,7 @@ Make this beginner-friendly with clear explanations and safety considerations.`;
 async function startServer() {
   await ensureDataDir();
   app.listen(PORT, () => {
-    console.log(`AI Fitness Trainer server running on port ${PORT}`);
+    console.log(`Simple Strength server running on port ${PORT}`);
   });
 }
 
