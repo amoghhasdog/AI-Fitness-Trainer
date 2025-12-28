@@ -17,10 +17,15 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static('public'));
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI (only if API key is provided)
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+} else {
+  console.warn('⚠️  WARNING: OPENAI_API_KEY environment variable is not set. AI features will not work.');
+}
 
 // File paths
 const COUNTER_FILE = path.join(__dirname, 'data', 'generation_counter.json');
@@ -144,6 +149,14 @@ app.post('/api/increment-visit', async (req, res) => {
 
 app.post('/api/generate-plan', generatePlanLimit, async (req, res) => {
   try {
+    // Check if OpenAI is configured
+    if (!openai) {
+      return res.status(500).json({ 
+        error: 'OpenAI API key is not configured. Please set OPENAI_API_KEY environment variable.',
+        details: 'The server is missing the required API key to generate plans.'
+      });
+    }
+
     const {
       planType,
       age,
