@@ -31,7 +31,18 @@ async function ensureDataDir() {
   
   // Initialize counter file if it doesn't exist
   if (!(await fs.pathExists(COUNTER_FILE))) {
-    await fs.writeJson(COUNTER_FILE, { totalGenerations: 0 });
+    await fs.writeJson(COUNTER_FILE, { totalGenerations: 0, totalVisits: 0 });
+  } else {
+    // Ensure totalVisits exists in existing file
+    try {
+      const data = await fs.readJson(COUNTER_FILE);
+      if (data.totalVisits === undefined) {
+        data.totalVisits = 0;
+        await fs.writeJson(COUNTER_FILE, data);
+      }
+    } catch (error) {
+      console.error('Error updating counter file:', error);
+    }
   }
 }
 
@@ -49,12 +60,40 @@ async function getGenerationCount() {
 // Increment generation counter
 async function incrementGenerationCount() {
   try {
-    const currentCount = await getGenerationCount();
+    const data = await fs.readJson(COUNTER_FILE);
+    const currentCount = data.totalGenerations || 0;
     const newCount = currentCount + 1;
-    await fs.writeJson(COUNTER_FILE, { totalGenerations: newCount });
+    data.totalGenerations = newCount;
+    await fs.writeJson(COUNTER_FILE, data);
     return newCount;
   } catch (error) {
     console.error('Error updating counter:', error);
+    return 0;
+  }
+}
+
+// Get visit counter
+async function getVisitCount() {
+  try {
+    const data = await fs.readJson(COUNTER_FILE);
+    return data.totalVisits || 0;
+  } catch (error) {
+    console.error('Error reading visit counter:', error);
+    return 0;
+  }
+}
+
+// Increment visit counter
+async function incrementVisitCount() {
+  try {
+    const data = await fs.readJson(COUNTER_FILE);
+    const currentCount = data.totalVisits || 0;
+    const newCount = currentCount + 1;
+    data.totalVisits = newCount;
+    await fs.writeJson(COUNTER_FILE, data);
+    return newCount;
+  } catch (error) {
+    console.error('Error updating visit counter:', error);
     return 0;
   }
 }
@@ -80,6 +119,26 @@ app.get('/api/generation-count', async (req, res) => {
     res.json({ totalGenerations: count });
   } catch (error) {
     res.status(500).json({ error: 'Failed to get generation count' });
+  }
+});
+
+app.get('/api/visit-count', async (req, res) => {
+  try {
+    const count = await getVisitCount();
+    res.json({ totalVisits: count });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get visit count' });
+  }
+});
+
+// Increment visit counter (called on page load/reload)
+app.post('/api/increment-visit', async (req, res) => {
+  try {
+    const newCount = await incrementVisitCount();
+    res.json({ totalVisits: newCount });
+  } catch (error) {
+    console.error('Error incrementing visit count:', error);
+    res.status(500).json({ error: 'Failed to increment visit count' });
   }
 });
 

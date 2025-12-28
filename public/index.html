@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness Trainer - Personalized Workout & Diet Plans</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-dumbbell"></i> AI Fitness Trainer</h1>
+            <p>Get your personalized workout and diet plan in minutes</p>
+            <div class="generation-counter">
+                <span class="counter-text">Total Users: </span>
+                <span class="counter-number" id="generationCount">0</span>
+            </div>
+        </header>
+
+        <!-- Plan Type Selection -->
+        <div class="step" id="planTypeStep">
+            <h2>What would you like to generate?</h2>
+            <div class="plan-type-options">
+                <button class="plan-option" data-plan="workout">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Workout Plan Only</span>
+                </button>
+                <button class="plan-option" data-plan="diet">
+                    <i class="fas fa-apple-alt"></i>
+                    <span>Diet Plan Only</span>
+                </button>
+                <button class="plan-option selected" data-plan="both">
+                    <i class="fas fa-heart"></i>
+                    <span>Both Plans</span>
+                </button>
+            </div>
+            <button class="next-btn" onclick="nextStep()">Continue</button>
+        </div>
+
+        <!-- Questionnaire -->
+        <div class="step hidden" id="questionnaireStep">
+            <h2>Tell us about yourself</h2>
+            <form id="fitnessForm">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Basic Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="13" max="25" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="non-binary">Non-binary</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="height">Height</label>
+                            <input type="text" id="height" name="height" placeholder="e.g., 5'8&quot; or 173cm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight</label>
+                            <input type="text" id="weight" name="weight" placeholder="e.g., 150lbs or 68kg" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fitness Level -->
+                <div class="form-section">
+                    <h3><i class="fas fa-chart-line"></i> Fitness Level</h3>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="fitnessLevel" value="beginner" required>
+                            <span>Beginner - New to exercise</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="fitnessLevel" value="intermediate">
+                            <span>Intermediate - Some exercise experience</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="fitnessLevel" value="advanced">
+                            <span>Advanced - Regular exercise routine</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Time Availability -->
+                <div class="form-section">
+                    <h3><i class="fas fa-clock"></i> Time Availability</h3>
+                    <div class="form-group">
+                        <label for="timeAvailability">How much time can you dedicate to fitness per day?</label>
+                        <select id="timeAvailability" name="timeAvailability" required>
+                            <option value="">Select</option>
+                            <option value="15-30 minutes">15-30 minutes</option>
+                            <option value="30-45 minutes">30-45 minutes</option>
+                            <option value="45-60 minutes">45-60 minutes</option>
+                            <option value="1+ hours">1+ hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Goals -->
+                <div class="form-section">
+                    <h3><i class="fas fa-target"></i> Your Goals</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="weight-loss">
+                            <span>Weight Loss</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="muscle-gain">
+                            <span>Muscle Gain</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="strength">
+                            <span>Build Strength</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="endurance">
+                            <span>Improve Endurance</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="flexibility">
+                            <span>Increase Flexibility</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetGoals" value="general-fitness">
+                            <span>General Fitness</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Target Muscle Groups -->
+                <div class="form-section workout-only">
+                    <h3><i class="fas fa-muscle"></i> Target Muscle Groups</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="chest">
+                            <span>Chest</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="back">
+                            <span>Back</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="shoulders">
+                            <span>Shoulders</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="arms">
+                            <span>Arms</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="core">
+                            <span>Core</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="legs">
+                            <span>Legs</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="targetMuscles" value="full-body">
+                            <span>Full Body</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Diet Restrictions -->
+                <div class="form-section diet-only">
+                    <h3><i class="fas fa-leaf"></i> Dietary Preferences</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="vegetarian">
+                            <span>Vegetarian</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="vegan">
+                            <span>Vegan</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="gluten-free">
+                            <span>Gluten-free</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="dairy-free">
+                            <span>Dairy-free</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="keto">
+                            <span>Keto</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="paleo">
+                            <span>Paleo</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="dietRestrictions" value="none">
+                            <span>No restrictions</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="allergies">Food Allergies (optional)</label>
+                        <input type="text" id="allergies" name="allergies" placeholder="e.g., nuts, shellfish, eggs">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="preferredMeals">Preferred Meal Types</label>
+                            <select id="preferredMeals" name="preferredMeals">
+                                <option value="quick-easy">Quick & Easy</option>
+                                <option value="meal-prep">Meal Prep Friendly</option>
+                                <option value="home-cooked">Home Cooked</option>
+                                <option value="mixed">Mixed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cookingTime">Available Cooking Time</label>
+                            <select id="cookingTime" name="cookingTime">
+                                <option value="minimal">Minimal (under 15 min)</option>
+                                <option value="moderate">Moderate (15-30 min)</option>
+                                <option value="extended">Extended (30+ min)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget -->
+                <div class="form-section">
+                    <h3><i class="fas fa-dollar-sign"></i> Budget (Monthly)</h3>
+                    <div class="form-row">
+                        <div class="form-group workout-only">
+                            <label for="gymBudget">Gym Membership ($)</label>
+                            <input type="number" id="gymBudget" name="gymBudget" min="0" value="0" placeholder="0">
+                        </div>
+                        <div class="form-group workout-only">
+                            <label for="equipmentBudget">Home Equipment ($)</label>
+                            <input type="number" id="equipmentBudget" name="equipmentBudget" min="0" value="0" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group diet-only">
+                            <label for="foodBudget">Food Budget ($)</label>
+                            <input type="number" id="foodBudget" name="foodBudget" min="0" value="200" placeholder="200">
+                        </div>
+                        <div class="form-group diet-only">
+                            <label for="supplementBudget">Supplements ($)</label>
+                            <input type="number" id="supplementBudget" name="supplementBudget" min="0" value="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="back-btn" onclick="prevStep()">Back</button>
+                    <button type="submit" class="generate-btn">
+                        <i class="fas fa-magic"></i>
+                        Generate My Plan
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Loading -->
+        <div class="step hidden" id="loadingStep">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>Creating Your Personalized Plan</h2>
+                <p>Our AI is analyzing your information and crafting the perfect fitness and nutrition plan for you...</p>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="step hidden" id="resultsStep">
+            <div class="results-header">
+                <h2>Your Personalized Plan</h2>
+                <button class="start-over-btn" onclick="startOver()">
+                    <i class="fas fa-redo"></i>
+                    Create New Plan
+                </button>
+            </div>
+            <div class="results-content" id="resultsContent">
+                <!-- Generated plan will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
